@@ -1,47 +1,114 @@
 ---
-const THE_MOVIE_DB_API_KEY = import.meta.env.THE_MOVIE_DB_API_KEY;
+const THE_MOVIE_DB_API_KEY = import.meta.env.PUBLIC_THE_MOVIE_DB_API_KEY;
+const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL; 
 const base_url = "https://image.tmdb.org/t/p/original"
 const { title, fetchUrl, isLargeRow } = Astro.props
+
 const response = await fetch('https://api.themoviedb.org/3' + fetchUrl + '&sort_by=vote_count.desc', 
     {
     method: 'GET',
-		headers:  {
-		accept: 'application/json',
-	    Authorization: THE_MOVIE_DB_API_KEY
-	}})
+    headers:  {
+    accept: 'application/json',
+      Authorization: THE_MOVIE_DB_API_KEY
+  }})
 const res = await response.json()
 const movies = res.results
-//console.log('movies', movies)
 ---
-<div class="row">
+
+<div 
+  class="row" 
+  data-movies={JSON.stringify(movies || [])} 
+  data-server-url={PUBLIC_SERVER_URL}
+>
   <h2>{title}</h2>
   <div class="row_posters">
       {movies && movies.map((movie, id) => {
       return movie.poster_path && (<img
           id={id}
           loading="lazy"
-          onclick=`ShowModal(${JSON.stringify(movie)})`
-          class={`row_poster ${isLargeRow && "row_posterLarge"}`}
+          data-id={movie.id}
+          class={`row_poster row-clickable ${isLargeRow && "row_posterLarge"}`}
           src={`${base_url}${movie.poster_path}`}
           alt={movie.title ?? movie.name} />
       )
       })}
   </div>
-  </div>
 </div>
 
-<script is:inline>
-    document.getElementById('background-dialog').addEventListener('click', () => {
-      const dialog = document.getElementById('dialog')
-      if(dialog.classList.contains('show')){
-        HideModal(dialog)
-      }
-    })
+<script>
+  let currentServerUrl = "";
+
+  const idUser = localStorage.getItem('idUser') || sessionStorage.getItem('idUser');
+  const idProfile = localStorage.getItem('idProfile') || sessionStorage.getItem('idProfile');
+  const tokenLocalStorage = localStorage.getItem('token');
+
+    const updateProfile = async (change, id) => {
+        let caughtError;
+        if (!currentServerUrl) {
+            console.error("Server URL no definida");
+            return [false, "Something went wrong, try again later..."];
+        }
+
+        await fetch(`${currentServerUrl}/users/${idUser}/${idProfile}?change=${change}&id=${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${tokenLocalStorage}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success){
+                    return [true, data.message];
+                } else {
+                    return [false, data.message];
+                }
+            }).catch((error) => {
+                // console.error('Error:', error);
+                caughtError = error;
+            });
+        if(caughtError == undefined) return [true, "success"];
+        return [false, "Something went wrong, try again later..."]
+    }
+
+    const navigateToPlayer = (title, isMovie, release_date) => {
+        window.location.href = `/PlayMedia?title=${title}&isMovie=${isMovie}&release_date=${release_date}`;
+    }
+
+    const PlayMedia = async (movie) => {
+          const media_type = (movie.first_air_date) ? "tv" : "movie";
+          const result = await updateProfile(media_type, movie.id)
+          if(result[0]){
+              navigateToPlayer(movie?.title || movie?.name || movie?.original_name, (media_type == "movie") ? true : false, movie?.release_date || movie?.first_air_date)
+          }else{
+              alert(result[1])
+          }
+    }
+
+    const AddMyList = async (type, movie) => {
+          const result = await updateProfile(type, movie.id)
+          if(result[0]){
+              alert("Added ✅")
+          }else{
+              alert(result[1])
+          }
+    }
+
+    const bgDialog = document.getElementById('background-dialog');
+    if(bgDialog){
+      bgDialog.addEventListener('click', () => {
+        const dialog = document.getElementById('dialog')
+        if(dialog.classList.contains('show')){
+          HideModal(dialog)
+        }
+      })
+    }
+
     function ShowModal(c){
       const body = document.body, html = document.documentElement;
       const pageHeight = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, 
       html.offsetHeight);
-      console.log('c', c)
+      
       document.getElementById('dialog-h1').innerText = c['name'] ?? c['title'] ?? c['original_title']
       document.getElementById('dialog-span-votes').innerText = `Rating: ${Math.round(c['vote_average'] * 10)}% `
       document.getElementById('dialog-span-release').innerText = ` Released date: ${c['first_air_date'] ?? c['release_date']}`
@@ -54,16 +121,36 @@ const movies = res.results
       document.getElementById('dialog').classList.toggle('show')
       document.getElementById('dialog').style.visibility = "visible"
 
-      document.getElementById('dialog-button-play-a-href').href = `/play_media?title=${c?.title || c?.name || c?.original_name}&isMovie=${(c?.release_date == undefined) ? 'false': 'true'}&release_date=${c?.release_date || c?.first_air_date}`
-      document.getElementById('dialog-button-add-list-a-href').href = `#`
+      document.getElementById('dialog-button-play-a-href').onclick = () => PlayMedia(c);
+      document.getElementById('dialog-button-add-list-a-href').onclick = () => AddMyList("WishList", c);
     }
+    
     function HideModal(d){
-      document.getElementById('background-dialog').style.width = 0;
-      document.getElementById('background-dialog').style.height = 0;
+      document.getElementById('background-dialog').style.width = "0px";
+      document.getElementById('background-dialog').style.height = "0x";
       document.getElementById('background-dialog').style.position = 'none';
       d.classList.toggle('show')
       d.style.visibility = "hidden"
     }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (target && target.classList.contains('row-clickable')) {
+      const rowContainer = target.closest('.row');
+      if (rowContainer) {
+          const rowMovies = JSON.parse(rowContainer.dataset.movies || "[]");
+          currentServerUrl = rowContainer.dataset.serverUrl;
+          const movieId = target.getAttribute('data-id');
+          const movieData = rowMovies.find(m => m.id == movieId);
+          if (movieData) {
+            ShowModal(movieData);
+          } 
+          // else {
+          //   console.error("No se encontró la película en esta fila.");
+          // }
+      }
+    }
+  });
 </script>
 
 <style>
@@ -72,17 +159,14 @@ const movies = res.results
   margin: 0 20px;
   position: relative;
 }
-
 .row_posters {
   display: flex;
   overflow-x: scroll;
   padding: 20px;
 }
-
 .row_posters::-webkit-scrollbar {
   display: none;
 }
-
 .row_poster {
   width: 200px;
   object-fit: contain;
@@ -91,15 +175,12 @@ const movies = res.results
   transition: transform 450ms;
   border-radius: 10px;
 }
-
 .row_poster:hover {
   transform: scale(1.1);
 }
-
 .row_posterLarge {
   max-height: 250px;
 }
-
 .row_posterLarge:hover {
   transform: scale(1.11);
 } 

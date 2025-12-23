@@ -4,4 +4,5 @@
 interface ImportMetaEnv {
   readonly PUBLIC_API_URL: string;
   readonly SECRET_API_KEY: string;
+  readonly PROJECT_NAME: string;
 }

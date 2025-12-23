@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-const PUBLIC_RAPIDAPI_API_KEY: string = import.meta.env.PUBLIC_RAPIDAPI_API_KEY;
+const PUBLIC_RAPIDAPI_API_KEY = import.meta.env.PUBLIC_RAPIDAPI_API_KEY;
 
 export default function Player ({url}){
 
@@ -20,14 +20,14 @@ export default function Player ({url}){
     let url_to_fetch = new URL(`https://imdb-movies-web-series-etc-search.p.rapidapi.com/=${low_title.replaceAll(" ", "")}.json`)
 
     const MediaNoFound = () => {
-      console.log('Media no Found')
+      // console.log('Media no Found')
       setMessage('Media no Found')
     }
 
   const LookForMovie = async (movie_results) => {
-    console.log({title, release_year})
+    // console.log({title, release_year})
     movie_results = movie_results.filter((e) => e?.title == title && e?.year == release_year)
-    console.log({movie_results})
+    // console.log({movie_results})
       movie_results.forEach(async element => {
         const url = `https://imdb188.p.rapidapi.com/api/v1/searchIMDB?query=${element.imdb_id}`;
         const options = {
@@ -40,9 +40,8 @@ export default function Player ({url}){
         try {
           const response = await fetch(url, options);
           const result = await response.json();
-          console.log({result})
+          // console.log({result})
           if(result.data !== undefined){
-            console.log('here')
             const data_result = await result.data.filter((e) => e?.year == release_year && e?.title == title)[0]
             setFinal_movie(data_result)
           }
@@ -62,19 +61,19 @@ export default function Player ({url}){
           'x-rapidapi-host': 'imdb-movies-web-series-etc-search.p.rapidapi.com',
         }
       };
-      console.log({options})
+      // console.log({options})
       const response = await fetch(url_to_fetch, options);
-      console.log({response})
+      // console.log({response})
       const result = await response.json();
       media_results = result?.d
-      console.log({isMovie})
-      console.log({media_results})
+      // console.log({isMovie})
+      // console.log({media_results})
       if(!media_results || media_results.length < 1){
         MediaNoFound()
         return
       }
 
-      console.log({low_title})
+      // console.log({low_title})
       await media_results.forEach((a) => {
         if(a['l'].toLocaleLowerCase() == low_title && a['y'] == release_year){
           setFinal_movie(a)
@@ -103,7 +102,7 @@ export default function Player ({url}){
   
   useEffect(() => {
     if (final_movie != undefined) setNew_url((isMovie == "true") ? `https://vidsrc-me.su/embed/movie?imdb=${final_movie?.id}` : `https://vidsrc-me.su/embed/tv?imdb=${final_movie?.id}&season=1&episode=1`)
-    console.log({final_movie})
+    // console.log({final_movie})
   }, [final_movie])
 
     return(

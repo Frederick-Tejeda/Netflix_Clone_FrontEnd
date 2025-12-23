@@ -1,0 +1,299 @@
+---
+const { PROJECT_NAME } = import.meta.env;
+const lang = Astro.url.searchParams.get("lang") || 'en';
+const email = Astro.url.searchParams.get("email") || "";
+---
+<!doctype html>
+<html lang="en" class="">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>{PROJECT_NAME}</title>
+        <link rel="icon" type="image/x-icon" href="/icon.ico" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
+        <link rel="stylesheet" href="/normalize.css"/>
+
+    </head>
+    <body>
+            <div id="container">
+                <main>
+                    <div id="navbar">
+                        <div id="shadow_div"></div>
+                        <nav>
+                            <div id="logo_div">
+                                <img src="/netflix_logo.png" alt={PROJECT_NAME}>
+                            </div>
+                        </nav>
+                    </div>
+                    <form>
+                        <h2>{ (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</h2>
+                        <div class="email_input_div">
+                            <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
+                            <input type="email" name="email_input" id="email_input" class="email_input" placeholder="" value={email} required/>
+                        </div>
+                        <div class="password_input_div">
+                            <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
+                            <input type="password" name="password_input" id="password_input" class="password_input" placeholder="" required/>
+                        </div>
+                        <button type="submit" id="login_button">{ (lang == "en") ? "Sign In" : "Iniciar Sesión" }</button>
+                        <a href=`/LoginHelp?lang=${lang}`>{(lang == "en") ? "Forgot password?" : "¿Olvidó su contraseña?"}</a>
+                        <div id="remember_me_div">
+                            <input type="checkbox" name="remember_me" id="remember_me_input" class="remember_me_input" />
+                            <label id="remember_me_label" for="remember_me_input">{ (lang == "en") ? "Remember me" : "Recordarme" }</label>
+                        </div>
+                        <p>{(lang == "en") ? "New to " + PROJECT_NAME + "?" : "¿Nuevo en " + PROJECT_NAME + "?"} <a href=`/SignUp?lang=${lang}`>{(lang == "en") ? "Sign up now" : "Regístrate ahora"}</a></p>
+                    </form>
+                </main>
+            </div>
+    </body>
+</html>
+<style>
+    body{
+        background-color: #000;
+        max-width: 100%;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+    #container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        & main{
+            width: 100%;
+            height: 90dvh;
+            display: flex;
+            flex-direction: column;
+            & #shadow_div{
+                background-image: url(https://assets.nflxext.com/ffe/siteui/vlv3/9ba9f0e2-b246-47f4-bd1f-3e84c23a5db8/web/DO-en-20251020-TRIFECTA-perspective_81ec6b4c-9a10-477e-acc2-24eb7b6002e7_large.jpg);
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                opacity: 0.5;
+                width: 100%;
+                height: 90dvh;
+                z-index: 1;
+                position: absolute;
+            }
+            & #navbar{
+                & nav{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 2% 5%;
+                    z-index: 3;
+                    & #logo_div{
+                        width: 25dvw;
+                        max-width: 150px;
+                        min-width: 100px;
+                    }
+                    & #logo_div img{
+                        width: 100%;
+                        height: auto;
+                    }
+                }
+            }
+            form{
+                z-index: 2;
+                margin: auto;
+                background-color: rgba(0, 0, 0, 0.75);
+                padding: 20px 50px;
+                border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                width: 20dvmin;
+                min-width: 300px;
+                max-width: 450px;
+                height: 40dvmin;
+                min-height: 450px;
+                max-height: 675px;
+                & h2 {
+                    font-weight: bold;
+                    margin-bottom: 30px;
+                }
+                & div{
+                    position: relative;
+                    width: 100%;
+                    min-width: 300px;
+                    max-width: 600px;
+                    margin: 0 0 10px;
+                    & label{
+                        position: absolute;
+                        top: 50%;
+                        left: 10px;
+                        transform: translateY(-50%);
+                        padding: 0 0 0 5px;
+                        color: #BBB;
+                        font-size: 16px;
+                        transition: all 0.2s ease-in;
+                    }
+                    & input{
+                        width: 100%;
+                        padding: 1rem 0 1rem 10px;
+                        font-size: 1rem;
+                        border: 1px solid gray;
+                        outline: none;
+                        border-radius: 5px;
+                        background-color: rgba(10, 10, 10, 0.4);
+                        text-align: left !important;   
+                        transition: all 0.2s ease-in 0.2s;
+                    }
+                }
+                & button{
+                    background-color: #E50914;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 1rem;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin: 10px 0;
+                }
+                & a{
+                    color: #fff;
+                    font-size: 0.9rem;
+                    margin: 10px 0;
+                    text-align: center;
+                }
+                & #remember_me_div{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    margin: 10px 0;
+                    & #remember_me_input{
+                        width: 16px;
+                        height: 16px;
+                    }
+                    & #remember_me_label{
+                        position: none;
+                        font-size: 0.9rem;
+                        color: #BBB;
+                        top: 50%;
+                        left: 20px;
+                        transform: translateY(-50%);
+                    }
+                }
+                p{
+                    color: #BBB;
+                    font-size: 0.9rem;
+                    margin: 10px 0;
+                    & a{
+                        color: white;
+                     }
+                }
+            }
+        }
+    }
+</style>
+<script>
+
+    const emailInput = document.getElementById("email_input");
+    const passwordInput = document.getElementById("password_input");
+    const emailLabel = document?.getElementById("email_label");
+    const passwordLabel = document?.getElementById("password_label");
+
+
+    const EmailFocused = () => {
+        if(!emailLabel) return;
+        emailLabel.style.top = "11px";
+        emailLabel.style.fontSize = "10px";
+        emailLabel.style.fontWeight = "bold";
+    }
+
+    const EmailBlured = () => {
+        if(!emailLabel) return;
+        if(emailInput.value == ""){
+            emailLabel.style.top = "50%";
+            emailLabel.style.fontSize = "var(--text)";
+            emailLabel.style.fontWeight = "normal";
+        }
+    }
+
+    emailInput.addEventListener("focus", EmailFocused)
+    emailInput.addEventListener("blur", EmailBlured);
+
+    const PasswordFocused = () => {
+        if(!passwordLabel) return;
+        passwordLabel.style.top = "11px";
+        passwordLabel.style.fontSize = "10px";
+        passwordLabel.style.fontWeight = "bold";
+    }
+
+    const PasswordBlured = () => {
+        if(!passwordLabel) return;
+        if(passwordInput.value == ""){
+            passwordLabel.style.top = "50%";
+            passwordLabel.style.fontSize = "var(--text)";
+            passwordLabel.style.fontWeight = "normal";
+        }
+    }
+
+    passwordInput.addEventListener("focus", PasswordFocused);
+    passwordInput.addEventListener("blur", PasswordBlured);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const HandlerSubmit = async (e) => {
+        e.preventDefault();
+
+        if(!emailRegex.test(emailInput.value)){
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        console.log("Submitting:", emailInput.value, passwordInput.value);
+        
+        EmailBlured();
+        PasswordBlured();
+
+        const rememberUser = document.getElementById("remember_me_input").checked;
+
+        fetch("http://localhost:8888/users/auth", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "username": emailInput.value,
+                "password": passwordInput.value
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success){
+                const now = new Date();
+                const later = new Date(now);
+                later.setHours(now.getHours() + 1);
+                if(rememberUser){
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('name', data.name);
+                    localStorage.setItem('idUser', data.idUser);
+                    localStorage.setItem('idProfile', data.idProfile);
+                }else{
+                    sessionStorage.setItem('token', data.token);
+                    sessionStorage.setItem('name', data.name);
+                    sessionStorage.setItem('idUser', data.idUser);
+                    sessionStorage.setItem('idProfile', data.idProfile);
+                }
+                localStorage.setItem('time_out', later.toLocaleString());
+                location.href = 'Home';
+            } else {
+                alert("Invalid email or password.");
+            }
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+        emailInput.value = "";
+        passwordInput.value = "";
+    }
+
+    document.querySelector("form").addEventListener("submit", HandlerSubmit);
+</script>

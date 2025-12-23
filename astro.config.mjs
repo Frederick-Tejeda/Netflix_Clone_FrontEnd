@@ -7,5 +7,5 @@ import react from "@astrojs/react";
 export default defineConfig({
   output: "server",
   adapter: vercel(),
-  integrations: [react({experimentalReactChildren: true})]
+  integrations: [react({experimentalReactChildren: true})],
 });

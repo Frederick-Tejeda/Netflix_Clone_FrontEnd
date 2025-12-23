@@ -1,0 +1,255 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Row from '../../components/Row.astro';
+import Nav from '../../components/Nav.astro';
+import BannerReact from '../../components/BannerReact';
+const requests = {
+	fetchNetflixOriginals: `/discover/tv?with_network=123`,
+	fetchTrending: `/trending/all/week?language=en-US`,
+	fetchTopRated: `/movie/top_rated?language=en-US`,
+	fetchFamilyMovies: `/discover/movie?with_genres=10751`,
+	fetchActionMovies: '/discover/movie?with_genres=28',
+	fetchComedyMovies: '/discover/movie?with_genres=35',
+	fetchCrimeMovies: '/discover/movie?with_genres=80',
+	fetchDocumentaries: '/discover/movie?with_genres=99',
+	fetchMisteryMovies: '/discover/movie?with_genres=9648',
+	fetchSci_FyAndFantasyMovies: '/discover/movie?with_genres=878',
+	fetchWesternMovies: '/discover/movie?with_genres=37',
+};
+---
+
+<script defer>
+	const tokenSessionStorage = sessionStorage.getItem('token');
+	const nameSessionStorage = sessionStorage.getItem('name');
+	const tokenLocalStorage = localStorage.getItem('token');
+	const nameLocalStorage = localStorage.getItem('name');
+	const timeOutLocalStorage = localStorage.getItem('time_out');
+
+	if(!((!tokenSessionStorage && !nameSessionStorage) || (!tokenLocalStorage && !nameLocalStorage))) { 
+		window.location.href = '/Login'; 
+	}else{
+		if(timeOutLocalStorage){
+			const now = new Date();
+			const timeOutDate = new Date(timeOutLocalStorage);
+			if(now > timeOutDate){
+				localStorage.removeItem('time_out');
+				localStorage.removeItem('token');
+				localStorage.removeItem('name');
+				localStorage.removeItem('idUser');
+				localStorage.removeItem('idProfile');
+				sessionStorage.removeItem('token');
+				sessionStorage.removeItem('name');
+				sessionStorage.removeItem('idUser');
+				sessionStorage.removeItem('idProfile');
+				window.location.href = '/Login';
+			}
+		}else{
+			localStorage.removeItem('time_out');
+				localStorage.removeItem('token');
+				localStorage.removeItem('name');
+				localStorage.removeItem('idUser');
+				localStorage.removeItem('idProfile');
+				sessionStorage.removeItem('token');
+				sessionStorage.removeItem('name');
+				sessionStorage.removeItem('idUser');
+				sessionStorage.removeItem('idProfile');
+			window.location.href = '/Login';
+		}
+	}
+</script>
+
+<Layout title="Home">
+	<Nav />
+	<BannerReact client:load />
+	<div id="background-dialog"></div>
+	<div id="dialog" class="dialog">
+		<div class="dialog-container">
+			<h1 id="dialog-h1"></h1>
+			<h3><span id="dialog-span-votes"></span><span id="dialog-span-release"></span></h3>
+			<p id="dialog-p"></p>
+			<div class="dialog_buttons">
+				<a id="dialog-button-play-a-href"><button id="dialog-button-play"><img src="./play_icon.png" alt="play_icon" /><span>Play</span></button></a>
+				<a id="dialog-button-add-list-a-href"><button id="dialog-button-add"><img src="./add_icon.png" alt="add_icon" /><span>My List</span></button></a>
+			</div>
+		</div>
+	</div>
+	<div class="row-container">
+		<div class="banner--fadeBottom">
+			<Row title="Platform Originals" isLargeRow fetchUrl={requests.fetchNetflixOriginals} />
+			<Row title="Trending" fetchUrl={requests.fetchTrending} />
+			<Row title="Top Rated" fetchUrl={requests.fetchTopRated} />
+			<Row title="Family Movies" fetchUrl={requests.fetchFamilyMovies} />
+			<Row title="Action and Adventure" fetchUrl={requests.fetchActionMovies} />
+			<Row title="Comedy Movies" fetchUrl={requests.fetchComedyMovies} />
+			<Row title="Documentaries" fetchUrl={requests.fetchDocumentaries} />
+			<Row title="Mistery Movies" fetchUrl={requests.fetchMisteryMovies} />
+			<Row title="Sci-Fi and Fantasy" fetchUrl={requests.fetchSci_FyAndFantasyMovies} />
+			<Row title="Western Movies" fetchUrl={requests.fetchWesternMovies} />
+		</div>
+	</div>
+</Layout>
+
+<style>
+#background-dialog{
+  background-color: rgba(0, 0, 0, 0.8);
+  position: none;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.dialog{
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: calc(80dvw - 40px);
+  aspect-ratio: 16/9;
+  visibility: hidden;
+  transition: 0.3s 0.3s ease-out;
+  color: white;
+  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 0 1.5rem 4rem rgba(23, 24, 24, 0.15);
+}
+.dialog-container{
+	background: linear-gradient(90deg, #000 30%, transparent);
+	width: calc(80dvw - 40px);
+	aspect-ratio: 16/9;
+	padding: 10px 20px 0px 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center
+}
+.dialog-container * {
+	width: 70%
+}
+.dialog h1{
+	text-align: left;
+}
+.dialog p{
+	font-size: 1.2rem;
+	line-height: 1.6rem;
+}
+.dialog #dialog-span-votes{
+	color: #2b961f
+}
+.dialog_buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+.dialog button{
+	width: auto;
+	height: auto;
+	padding: 8px 25px;
+	font-size: 1rem;
+	border: 0;
+	color: white;
+	border-radius: 3px;
+	transition: all 0.2s;
+	cursor: pointer;
+	position: relative;
+	display: flex;
+    align-items: center;
+    gap: 5px
+}
+.dialog button img{
+	height: 0.8rem;
+	width: auto;
+}
+.dialog button span{
+	margin-left: 10px
+}
+.dialog button:hover{
+	transform: scale(1.1)
+}
+.dialog #dialog-button-play{
+	background-color: red;
+}
+#dialog-button-play-a-href, #dialog-button-add-list-a-href{
+	text-decoration: none;
+  	color: white;
+	width: 100px;
+	max-width: 150px;
+}
+.dialog #dialog-button-add{
+	background-color: black;
+	border: 0.5px solid #7a7a7a;
+	width: 125px;
+}
+.show{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	.astro-a {
+		position: absolute;
+		top: -32px;
+		left: 50%;
+		transform: translatex(-50%);
+		width: 220px;
+		height: auto;
+		z-index: -1;
+	}
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+	.instructions {
+		margin-bottom: 2rem;
+		border: 1px solid rgba(var(--accent-light), 25%);
+		background: linear-gradient(rgba(var(--accent-dark), 66%), rgba(var(--accent-dark), 33%));
+		padding: 1.5rem;
+		border-radius: 8px;
+	}
+	.instructions code {
+		font-size: 0.8em;
+		font-weight: bold;
+		background: rgba(var(--accent-light), 12%);
+		color: rgb(var(--accent-light));
+		border-radius: 4px;
+		padding: 0.3em 0.4em;
+	}
+	.instructions strong {
+		color: rgb(var(--accent-light));
+	}
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 2rem;
+		padding: 0;
+	}
+	.row-container{
+		margin-top: 65dvh
+	}
+	.banner--fadeBottom {
+    position: absolute;
+	top: calc(65dvh - 7.4rem);
+    left: 0;
+    width: 100dvw;
+    height: 7.4rem;
+    background-image: linear-gradient(180deg, transparent, rgba(37, 37, 37, 0.61), #111);
+  }
+</style>
