@@ -1,5 +1,6 @@
 ---
 const { PROJECT_NAME } = import.meta.env;
+const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL;
 const lang = Astro.url.searchParams.get("lang") || 'en';
 const email = Astro.url.searchParams.get("email") || "";
 ---
@@ -15,7 +16,7 @@ const email = Astro.url.searchParams.get("email") || "";
         <link rel="stylesheet" href="/normalize.css"/>
 
     </head>
-    <body>
+    <body data-server-url={PUBLIC_SERVER_URL}>
             <div id="container">
                 <main>
                     <div id="navbar">
@@ -195,6 +196,8 @@ const email = Astro.url.searchParams.get("email") || "";
 </style>
 <script>
 
+    const PUBLIC_SERVER_URL = document.getElementsByTagName("body")[0].dataset.serverUrl;
+
     const emailInput = document.getElementById("email_input");
     const passwordInput = document.getElementById("password_input");
     const emailLabel = document?.getElementById("email_label");
@@ -256,7 +259,7 @@ const email = Astro.url.searchParams.get("email") || "";
 
         const rememberUser = document.getElementById("remember_me_input").checked;
 
-        fetch("http://localhost:8888/users/auth", {
+        fetch(`${PUBLIC_SERVER_URL}/users/auth`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
