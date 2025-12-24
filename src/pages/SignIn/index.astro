@@ -2,7 +2,6 @@
 const { PROJECT_NAME } = import.meta.env;
 const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL;
 const lang = Astro.url.searchParams.get("lang") || 'en';
-const email = Astro.url.searchParams.get("email") || "";
 ---
 <!doctype html>
 <html lang="en" class="">
@@ -10,7 +9,7 @@ const email = Astro.url.searchParams.get("email") || "";
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title>{PROJECT_NAME}</title>
+        <title>{PROJECT_NAME} | { (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</title>
         <link rel="icon" type="image/x-icon" href="/icon.ico" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
         <link rel="stylesheet" href="/normalize.css"/>
@@ -31,14 +30,14 @@ const email = Astro.url.searchParams.get("email") || "";
                         <h2>{ (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</h2>
                         <div class="email_input_div">
                             <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
-                            <input type="email" name="email_input" id="email_input" class="email_input" placeholder="" value={email} required/>
+                            <input type="email" name="email_input" id="email_input" class="email_input" placeholder="" required/>
                         </div>
                         <div class="password_input_div">
                             <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
                             <input type="password" name="password_input" id="password_input" class="password_input" placeholder="" required/>
                         </div>
                         <button type="submit" id="login_button">{ (lang == "en") ? "Sign In" : "Iniciar Sesión" }</button>
-                        <a href=`/LoginHelp?lang=${lang}`>{(lang == "en") ? "Forgot password?" : "¿Olvidó su contraseña?"}</a>
+                        <a href=`/SignInHelp?lang=${lang}`>{(lang == "en") ? "Forgot password?" : "¿Olvidó su contraseña?"}</a>
                         <div id="remember_me_div">
                             <input type="checkbox" name="remember_me" id="remember_me_input" class="remember_me_input" />
                             <label id="remember_me_label" for="remember_me_input">{ (lang == "en") ? "Remember me" : "Recordarme" }</label>
@@ -251,8 +250,6 @@ const email = Astro.url.searchParams.get("email") || "";
             alert("Please enter a valid email address.");
             return;
         }
-
-        console.log("Submitting:", emailInput.value, passwordInput.value);
         
         EmailBlured();
         PasswordBlured();
