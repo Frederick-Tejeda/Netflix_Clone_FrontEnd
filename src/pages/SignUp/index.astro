@@ -1,53 +1,40 @@
 ---
-const { PROJECT_NAME } = import.meta.env;
-const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL;
+const { PROJECT_NAME } = Astro.props;   
+import Layout from '../../layouts/Layout.astro';
 const lang = Astro.url.searchParams.get("lang") || 'en';
 const email = Astro.url.searchParams.get("email") || "";
 ---
-<!doctype html>
-<html lang="en" class="">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title>{PROJECT_NAME} | { (lang == "en") ? 'Sign Up' : 'Registrarse' }</title>
-        <link rel="icon" type="image/x-icon" href="/icon.ico" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
-        <link rel="stylesheet" href="/normalize.css"/>
-
-    </head>
-    <body data-server-url={PUBLIC_SERVER_URL} data-email={email}>
-            <div id="container" >
-                <main>
-                    <div id="navbar">
-                        <div id="shadow_div"></div>
-                        <nav>
-                            <div id="logo_div">
-                                <img src="/netflix_logo.png" alt={PROJECT_NAME}>
-                            </div>
-                        </nav>
+<Layout title={ (lang == "en") ? 'Sign Up' : 'Registrarse' } lang={lang}>
+    <div id="container" data-email={email}>
+        <main>
+            <div id="navbar">
+                <div id="shadow_div"></div>
+                <nav>
+                    <div id="logo_div">
+                        <img src="/netflix_logo.png" alt={PROJECT_NAME}>
                     </div>
-                    <form>
-                        <h2>{ (lang == "en") ? 'Sign Up' : 'Registrarse' }</h2>
-                        <div class="email_input_div">
-                            <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
-                            <input type="email" name="email_input" id="email_input" class="email_input" value={email} placeholder="" required/>
-                        </div>
-                        <div class="password_input_div">
-                            <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
-                            <input type="text" name="password_input" id="password_input" class="password_input" placeholder="" required/>
-                        </div>
-                        <div class="repeatedPassword_input_div">
-                            <label id="repeatedPassword_label" for="repeatedPassword_input">{ (lang == "en") ? "Confirm Password" : "Confirme Contraseña" }</label>
-                            <input type="password" name="repeatedPassword_input" id="repeatedPassword_input" class="password_input" placeholder="" required/>
-                        </div>
-                        <button type="submit" id="login_button">{ (lang == "en") ? 'Sign Up' : 'Registrarse' }</button>
-                        <p>{(lang == "en") ? "All ready a member? " : "¿Ya está registrado? "} <a href=`/SignIn?lang=${lang}`>{(lang == "en") ? "Sign in now" : "Inicie sesión"}</a></p>
-                    </form>
-                </main>
+                </nav>
             </div>
-    </body>
-</html>
+            <form>
+                <h2>{ (lang == "en") ? 'Sign Up' : 'Registrarse' }</h2>
+                <div class="email_input_div">
+                    <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
+                    <input type="email" name="email_input" id="email_input" class="email_input" value={email} placeholder="" required/>
+                </div>
+                <div class="password_input_div">
+                    <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
+                    <input type="text" name="password_input" id="password_input" class="password_input" placeholder="" required/>
+                </div>
+                <div class="repeatedPassword_input_div">
+                    <label id="repeatedPassword_label" for="repeatedPassword_input">{ (lang == "en") ? "Confirm Password" : "Confirme Contraseña" }</label>
+                    <input type="password" name="repeatedPassword_input" id="repeatedPassword_input" class="password_input" placeholder="" required/>
+                </div>
+                <button type="submit" id="login_button">{ (lang == "en") ? 'Sign Up' : 'Registrarse' }</button>
+                <p>{(lang == "en") ? "All ready a member? " : "¿Ya está registrado? "} <a href=`/SignIn?lang=${lang}`>{(lang == "en") ? "Sign in now" : "Inicie sesión"}</a></p>
+            </form>
+        </main>
+    </div>
+</Layout>
 <style>
     body{
         background-color: #000;
@@ -196,7 +183,7 @@ const email = Astro.url.searchParams.get("email") || "";
 <script>
 
     const PUBLIC_SERVER_URL = document.getElementsByTagName("body")[0].dataset.serverUrl;
-    const email = document.getElementsByTagName("body")[0].dataset.email;
+    const email = document.getElementById("container").dataset.email;
 
     const emailLabel = document?.getElementById("email_label");
     const emailInput = document?.getElementById("email_input");

@@ -1,4 +1,5 @@
 ---
+const lang = Astro.url.searchParams.get("lang") || 'en';
 import Layout from '../../layouts/Layout.astro';
 import Row from '../../components/Row.astro';
 import Nav from '../../components/Nav.astro';
@@ -58,7 +59,7 @@ const requests = {
 	}
 </script>
 
-<Layout title="Home">
+<Layout title="Home" lang={lang}>
 	<Nav />
 	<BannerReact client:load />
 	<div id="background-dialog"></div>

@@ -1,53 +1,40 @@
 ---
-const { PROJECT_NAME } = import.meta.env;
-const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL;
+const { PROJECT_NAME } = Astro.props;   
 const lang = Astro.url.searchParams.get("lang") || 'en';
+import Layout from '../../layouts/Layout.astro';
 ---
-<!doctype html>
-<html lang="en" class="">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <title>{PROJECT_NAME} | { (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</title>
-        <link rel="icon" type="image/x-icon" href="/icon.ico" />
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
-        <link rel="stylesheet" href="/normalize.css"/>
-
-    </head>
-    <body data-server-url={PUBLIC_SERVER_URL}>
-            <div id="container">
-                <main>
-                    <div id="navbar">
-                        <div id="shadow_div"></div>
-                        <nav>
-                            <div id="logo_div">
-                                <img src="/netflix_logo.png" alt={PROJECT_NAME}>
-                            </div>
-                        </nav>
+<Layout title={ (lang == "en") ? 'Sign In' : 'Iniciar Sesión' } lang={lang}>
+    <div id="container">
+        <main>
+            <div id="navbar">
+                <div id="shadow_div"></div>
+                <nav>
+                    <div id="logo_div">
+                        <img src="/netflix_logo.png" alt={PROJECT_NAME}>
                     </div>
-                    <form>
-                        <h2>{ (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</h2>
-                        <div class="email_input_div">
-                            <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
-                            <input type="email" name="email_input" id="email_input" class="email_input" placeholder="" required/>
-                        </div>
-                        <div class="password_input_div">
-                            <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
-                            <input type="password" name="password_input" id="password_input" class="password_input" placeholder="" required/>
-                        </div>
-                        <button type="submit" id="login_button">{ (lang == "en") ? "Sign In" : "Iniciar Sesión" }</button>
-                        <a href=`/SignInHelp?lang=${lang}`>{(lang == "en") ? "Forgot password?" : "¿Olvidó su contraseña?"}</a>
-                        <div id="remember_me_div">
-                            <input type="checkbox" name="remember_me" id="remember_me_input" class="remember_me_input" />
-                            <label id="remember_me_label" for="remember_me_input">{ (lang == "en") ? "Remember me" : "Recordarme" }</label>
-                        </div>
-                        <p>{(lang == "en") ? "New to " + PROJECT_NAME + "?" : "¿Nuevo en " + PROJECT_NAME + "?"} <a href=`/SignUp?lang=${lang}`>{(lang == "en") ? "Sign up now" : "Regístrate ahora"}</a></p>
-                    </form>
-                </main>
+                </nav>
             </div>
-    </body>
-</html>
+            <form>
+                <h2>{ (lang == "en") ? 'Sign In' : 'Iniciar Sesión' }</h2>
+                <div class="email_input_div">
+                    <label id="email_label" for="email_input">{ (lang == "en") ? "Email address" : "Correo electrónico" }</label>
+                    <input type="email" name="email_input" id="email_input" class="email_input" placeholder="" required/>
+                </div>
+                <div class="password_input_div">
+                    <label id="password_label" for="password_input">{ (lang == "en") ? "Password" : "Contraseña" }</label>
+                    <input type="password" name="password_input" id="password_input" class="password_input" placeholder="" required/>
+                </div>
+                <button type="submit" id="login_button">{ (lang == "en") ? "Sign In" : "Iniciar Sesión" }</button>
+                <a href=`/SignInHelp?lang=${lang}`>{(lang == "en") ? "Forgot password?" : "¿Olvidó su contraseña?"}</a>
+                <div id="remember_me_div">
+                    <input type="checkbox" name="remember_me" id="remember_me_input" class="remember_me_input" />
+                    <label id="remember_me_label" for="remember_me_input">{ (lang == "en") ? "Remember me" : "Recordarme" }</label>
+                </div>
+                <p>{(lang == "en") ? "New to " + PROJECT_NAME + "?" : "¿Nuevo en " + PROJECT_NAME + "?"} <a href=`/SignUp?lang=${lang}`>{(lang == "en") ? "Sign up now" : "Regístrate ahora"}</a></p>
+            </form>
+        </main>
+    </div>
+</Layout>  
 <style>
     body{
         background-color: #000;

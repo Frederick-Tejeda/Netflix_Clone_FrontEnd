@@ -1,31 +1,31 @@
 ---
 interface Props {
 	title: string;
+	lang: string;
 }
 
-const { title } = Astro.props;
+const { title, lang } = Astro.props;
 const { PROJECT_NAME } = import.meta.env;
+const PUBLIC_SERVER_URL = import.meta.env.PUBLIC_SERVER_URL;
 ---
-
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
-		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/x-icon" href="/icon.ico" />
+        <link rel="stylesheet" href="/normalize.css"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{PROJECT_NAME} | {title}</title>
+		<script src="../scripts/layout.js"></script>
 	</head>
-	<body>
+	<body data-server-url={PUBLIC_SERVER_URL}>
 		<slot />
 	</body>
 </html>
 <style is:global>
-	/* *{
-		margin: 0;
-		padding: 0
-	} */
 	:root {
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;

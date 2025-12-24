@@ -1,20 +1,9 @@
 ---
 let url = Astro.request.url || ""
+const lang = Astro.url.searchParams.get("lang") || 'en';
 import Player from '../../components/player'
+import Layout from '../../layouts/Layout.astro';
 ---
-<!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  </head>
-  <body>
-    <Player url={url} client:load />
-  </body>
-  </html>
-<style>
-  body{
-    background-color: #111;
-  }
-</style>
+<Layout title="Player" lang={lang}>
+  <Player url={url} client:load />
+</Layout>
